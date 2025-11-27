@@ -33,7 +33,11 @@ const DesktopNavbar = () => {
                 <Button
                     variant={'default'}
                     className='bg-indigo-400 text-primary hover:bg-violet-400 cursor-pointer trnasition-all'
-                >Dashboard</Button>
+                >
+                    <Link href={'/dashboard'}>
+                        Dashboard
+                    </Link>
+                </Button>
 
                 <SignOutButton>
                     <Button asChild variant={'outline'} className='cursor-pointer'>
