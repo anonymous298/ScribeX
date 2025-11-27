@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar/Navbar";
+import Aurora from "@/components/aurora";
+import DotGrid from "@/components/DotGrid";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,7 @@ export default function RootLayout({
 
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
           >
           <ThemeProvider
             attribute={'class'}
@@ -38,13 +40,24 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar/>
+            <Aurora
+              colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+              blend={1.0}
+              amplitude={1.0}
+              speed={0.3}
+            />
+          
 
-            <div className="min-h-screen">
-              {children}
+            <div className="absolute top-0 w-full">
+
+              <Navbar/>
+
+              <div className="min-h-screen">
+                {children}
+              </div>
+
+              {/* Footer */}
             </div>
-
-            {/* Footer */}
             
           </ThemeProvider>
         </body>
