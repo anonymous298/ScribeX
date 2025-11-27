@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar/Navbar";
 import Aurora from "@/components/aurora";
-import DotGrid from "@/components/DotGrid";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
