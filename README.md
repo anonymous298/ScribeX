@@ -1,0 +1,1 @@
+# ScribeX -> Full Stack Notes App
