@@ -5,6 +5,7 @@ import { FlipWords } from '../ui/flip-words'
 import { TypewriterEffect } from '../ui/typewriter-effect'
 import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
+import { motion } from 'motion/react'
 
 
 const MainHeroPage = () => {
@@ -13,7 +14,16 @@ const MainHeroPage = () => {
     <div className='w-full p-10'>
       <div className='grid grid-cols-1 md:grid-cols-10 min-h-screen grid-rows-5'>
 
-        <div id="leftSideHeroContent" className=' md:col-span-5 self-center items-center row-span-4'>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}          // Starting state
+          animate={{ opacity: 1, y: 0 }}           // Animate to this
+          transition={{
+            duration: 0.6,
+            ease: "easeOut",
+          }}
+          id="leftSideHeroContent" 
+          className=' md:col-span-5 self-center items-center row-span-4'
+        >
 
           <div className='flex flex-col gap-3'>
 
@@ -69,15 +79,24 @@ const MainHeroPage = () => {
 
           </div>
 
-        </div>
-
-        <div id="rightSideHeroContent" className='relative hidden md:block md:col-span-5 md:row-span-4'>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}          // Starting state
+          animate={{ opacity: 1, y: 0 }}           // Animate to this
+          transition={{
+            duration: 0.6,
+            ease: "easeOut",
+          }}
+          id="rightSideHeroContent"
+          className='relative hidden md:block md:col-span-5 md:row-span-4'
+        >
           <Image
             src={'/undraw_landing-page_zc5e.svg'}
             alt='landing page'
             fill={true}
           />
-        </div>
+        </motion.div >
 
       </div>
     </div>
