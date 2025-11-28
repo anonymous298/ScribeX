@@ -36,7 +36,7 @@ const DesktopNavbar = () => {
                     variant={'default'}
                     className='bg-indigo-400 text-primary hover:bg-violet-400 cursor-pointer trnasition-all'
                 >
-                    <Link href={'/dashboard'}>
+                    <Link href={'/dashboard'} className='w-full'>
                         Dashboard
                     </Link>
                 </Button>
