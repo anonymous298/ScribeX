@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <div className='w-full'>
       <div className='max-w-7xl mx-auto p-3 px-5 flex justify-between items-center'>
-        <div className="Logo text-2xl md:text-3xl font-bold text-white">Scribe<span className='text-indigo-600'>X</span></div>
+        <Link href={'/'} className="Logo text-2xl md:text-3xl font-bold text-white">Scribe<span className='text-indigo-600'>X</span></Link>
 
         <div className='flex items-center gap-x-3 sm:gap-x-4'>
             <Link href={'/'} className=' underline mr-3 hidden sm:inline'>
