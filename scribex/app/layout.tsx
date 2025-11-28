@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar/Navbar";
-import Aurora from "@/components/aurora";
+// import Navbar from "@/components/Navbar/Navbar";
+// import Aurora from "@/components/aurora";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,24 +39,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Aurora
-              colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-              blend={1.0}
-              amplitude={1.0}
-              speed={0.3}
-            />
-          
-
-            <div className="absolute top-0 w-full">
-
-              <Navbar/>
-
-              <div className="min-h-screen">
-                {children}
-              </div>
-
-              {/* Footer */}
-            </div>
+            {children}
             
           </ThemeProvider>
         </body>
