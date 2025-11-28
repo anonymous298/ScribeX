@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 // import Navbar from "@/components/Navbar/Navbar";
 // import Aurora from "@/components/aurora";
+import {Toaster} from 'react-hot-toast'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Toaster/>
             {children}
             
           </ThemeProvider>

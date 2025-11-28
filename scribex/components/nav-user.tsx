@@ -35,7 +35,18 @@ import {
 } from "@/components/ui/sidebar"
 import { SignOutButton } from "@clerk/nextjs"
 import { useTheme } from "next-themes"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { getAllNotes } from "@/server/actions/note.action"
+import { AvatarSkeleton } from "./dashboard/AvatarSkeleton"
+
+type Note = {
+  id: string;
+  author_id: string;
+  title: string;
+  content: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 export function NavUser({
   user,
@@ -50,6 +61,18 @@ export function NavUser({
 
   const {theme, setTheme} = useTheme()
 
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  // Fetch notes
+    useEffect(() => {
+      const fetchNotes = async () => {
+        const allNotes = await getAllNotes();
+        
+        setNotes(allNotes ?? []);
+      };
+      fetchNotes();
+    }, []);
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -59,15 +82,23 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              {!!notes.length ? 
+              <>
+                <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                </Avatar>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
+                </div>
+                <ChevronsUpDown className="ml-auto size-4" />
+              </>
+              : 
+              <>
+                <AvatarSkeleton/>
+              </>}
+              
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

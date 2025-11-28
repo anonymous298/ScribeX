@@ -4,11 +4,14 @@ import { Button } from '../ui/button'
 import Link from 'next/link'
 import DesktopNavbar from './DesktopNavbar'
 import MobileNavbar from './MobileNavbar'
+import { createUserBasedOnClerkId } from '@/server/actions/user.action'
+import { auth } from '@clerk/nextjs/server'
 
-const Navbar = () => {
+const Navbar = async () => {
 
-  // TODO: Add functionality to call the server action function when the user 
-  // logged in to check if it exists if not then create that new user
+  const {userId} = await auth()
+
+  if (userId) await createUserBasedOnClerkId();
 
   return (
     <div className='w-full'>

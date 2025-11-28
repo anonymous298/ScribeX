@@ -1,17 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { Plus, PlusIcon, PlusSquare } from "lucide-react"
+import { HomeIcon, Loader2Icon, Plus, PlusIcon, PlusSquare } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -21,13 +12,70 @@ import {
 import { Button } from "./ui/button"
 import Link from "next/link"
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+  DialogFooter
+} from "@/components/ui/dialog"
+import { Label } from "./ui/label"
+import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
+import { createNote } from "@/server/actions/note.action"
+import toast from "react-hot-toast"
+import { getCurrentUserDbId } from "@/server/actions/user.action"
+
 export function TeamSwitcher({}) {
-  const { isMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar()
+  const [isCreating, setIsCreating] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [formValues, setFormValues] = React.useState({
+    title: "",
+    content: ""
+  })
+  // console.log(formValues)
   // const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
   // if (!activeTeam) {
   //   return null
   // }
+
+  const handleCreateNote = async () => {
+    try {
+      setIsCreating(true)
+      
+      const current = await getCurrentUserDbId()
+
+      const result = await createNote(formValues.title, formValues.content);
+
+      if (result?.success) {
+        setFormValues({
+          title: "",
+          content: ""
+        });
+
+        toast.success("Note Created Successfully...")
+        setOpenMobile(false)
+        setIsOpen(false)
+
+      }
+
+      else {
+        toast.error(`Error Creating Note ${current}`)
+      }
+
+
+    } catch (error) {
+      console.log("Error occured while creating the note", error)
+      throw new Error("Error while creating the note")
+    } finally {
+      setIsCreating(false)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -48,19 +96,96 @@ export function TeamSwitcher({}) {
       </SidebarMenuItem> */}
 
         <SidebarMenuItem>
-          <Button
-            variant={'ghost'}
-            size="lg"
-            className="w-full bg-accent cursor-pointer flex justify-center items-center"
-          >
-            {/* {item.icon && <item.icon />} */}
-            {/* <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-              <PlusIcon/>
-            </div> */}
-            <PlusIcon className="col-span-2"/>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger 
+              asChild
+            >
+              <Button 
+                variant={'ghost'}
+                className="w-full bg-secondary cursor-pointer flex justify-center items-center"
+              >
+
+                <PlusIcon className="col-span-2"/>
+
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="w-full text-sm truncate text-foreground">Create Note</span>
+                </div>
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-center">Create Note</DialogTitle>
+              </DialogHeader>
+
+              <div className="flex flex-col gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="title">Title: </Label>
+                  <Input 
+                    name="title"
+                    value={formValues.title}
+                    id="title" 
+                    type="email" 
+                    placeholder="Enter your title..." 
+                    required 
+                    onChange={(e) => setFormValues({...formValues, [e.target.name] : e.target.value})}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="content">Content: </Label>
+                  <Textarea 
+                    name="content"
+                    value={formValues.content}
+                    id="content" 
+                    placeholder="Enter your content..." 
+                    className="w-full h-40"
+                    onChange={(e) => setFormValues({...formValues, [e.target.name] : e.target.value})}
+                    
+                  />
+
+                </div>
+
+                {/* For Future Updates */}
+                {/* <div>
+                  Tags
+                </div> */}
+
+              </div>
+
+              <DialogFooter className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
+                <DialogClose asChild>
+                  <Button variant={'outline'}>Cancel</Button>
+                </DialogClose>
+
+                <Button
+                  className="cursor-pointer"
+                  onClick={handleCreateNote}
+                  disabled={isCreating || !formValues.title.trim()}
+                >
+                  {isCreating ? 
+                    <>
+                      <Loader2Icon className="animate-spin"/>
+                      Creating
+                    </>
+                    :
+                    <>
+                      Create
+                    </>}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+
+          </Dialog>
+          
+        </SidebarMenuItem>
+
+        <SidebarMenuItem>
+          <Button className="w-full justify-start items-center mt-2">
+            <HomeIcon/>
 
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <Link href={'/'} className="w-full text-sm truncate text-foreground">Create Note</Link>
+              <Link href={'/'} className="w-full text-start cursor-pointer" onClick={() => setOpenMobile(false)}>Home</Link>
             </div>
           </Button>
         </SidebarMenuItem>
