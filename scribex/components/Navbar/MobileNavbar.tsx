@@ -45,8 +45,9 @@ const MobileNavbar = () => {
                             <Button
                                 asChild
                                 variant={'default'}
+                                onClick={() => setShowMobileMenu(false)}
                             >
-                                <span className='bg-indigo-400 text-primary hover:bg-violet-400 cursor-pointer trnasition-all'>
+                                <span className='bg-indigo-400 text-primary hover:bg-violet-400 cursor-pointer trnasition-all w-full'>
                                     Sign In
                                 </span>
                             </Button>
@@ -57,9 +58,13 @@ const MobileNavbar = () => {
                         <Button
                             variant={'default'}
                             className='bg-indigo-400 text-primary hover:bg-violet-400 cursor-pointer trnasition-all'
-                            onClick={() => setShowMobileMenu(false)}
+                            
                             >
-                                <Link href={'/dashboard'}>
+                                <Link 
+                                    href={'/dashboard'}
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className='w-full'
+                                >
                                     Dashboard
                                 </Link>
                         </Button>

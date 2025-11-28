@@ -1,12 +1,14 @@
 "use client"
 
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from '../ui/button'
 import { SignedIn, SignedOut, SignInButton, SignOutButton } from '@clerk/nextjs'
 import ThemeTogglerButton from '../ThemeTogglerButton'
 
 const DesktopNavbar = () => {
+
+
   return (
     <div>
       <div className='hidden sm:flex gap-x-3 items-center'>
