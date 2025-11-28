@@ -15,7 +15,7 @@ type Note = {
   updatedAt: Date;
 };
 
-const page = () => {
+const Page = () => {
 
   const [notes, setNotes] = useState<Note[]>([])
 
@@ -41,4 +41,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
