@@ -30,13 +30,15 @@ import toast from "react-hot-toast"
 import { getCurrentUserDbId } from "@/server/actions/user.action"
 
 export function TeamSwitcher({}) {
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile, open } = useSidebar()
   const [isCreating, setIsCreating] = React.useState(false)
   const [isOpen, setIsOpen] = React.useState(false)
   const [formValues, setFormValues] = React.useState({
     title: "",
     content: ""
   })
+
+  console.log(isMobile)
   // console.log(formValues)
   // const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
@@ -61,6 +63,9 @@ export function TeamSwitcher({}) {
         toast.success("Note Created Successfully...")
         setOpenMobile(false)
         setIsOpen(false)
+
+        // Force Load to show changes ToDo: Temperory in future I will add State Management to show changes on the spot
+        window.location.reload()
 
       }
 
@@ -101,14 +106,14 @@ export function TeamSwitcher({}) {
               asChild
             >
               <Button 
-                variant={'ghost'}
-                className="w-full bg-secondary cursor-pointer flex justify-center items-center"
+                variant={`${isMobile ? 'default' : (!isMobile && open) ? 'default' : 'ghost'}`}
+                className="w-full cursor-pointer flex justify-center items-center"
               >
 
-                <PlusIcon className="col-span-2"/>
+                <PlusIcon className="col-span-2 size-4"/>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="w-full text-sm truncate text-foreground">Create Note</span>
+                  <span className="w-full text-sm truncate text-secondary font-bold">Create Note</span>
                 </div>
               </Button>
             </DialogTrigger>
@@ -181,11 +186,16 @@ export function TeamSwitcher({}) {
         </SidebarMenuItem>
 
         <SidebarMenuItem>
-          <Button className="w-full justify-start items-center mt-2">
-            <HomeIcon/>
+
+          <Button 
+            variant={'ghost'}
+            className={`w-full ${isMobile ? 'bg-secondary' : (!isMobile && open) ? 'bg-secondary' : ''}  cursor-pointer flex justify-center items-center mt-1`}
+          >
+
+            <HomeIcon className="col-span-2 size-4"/>
 
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <Link href={'/'} className="w-full text-start cursor-pointer" onClick={() => setOpenMobile(false)}>Home</Link>
+              <Link href={'/'} className="w-full text-sm truncate font-bold" onClick={() => setOpenMobile(false)}>Home</Link>
             </div>
           </Button>
         </SidebarMenuItem>
