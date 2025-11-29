@@ -87,7 +87,7 @@ export function SectionCards() {
           transition={{ delay: idx * 0.1, type: "spring", stiffness: 120 }}
         >
           <SpotlightCard
-            className={`flex flex-col justify-between ${card.color} p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300`}
+            className={`flex flex-col justify-between ${card.color} p-6 border-none rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300`}
             spotlightColor="rgba(0, 229, 255, 0.5)"
           >
             {/* Header */}

@@ -37,7 +37,7 @@ export function NavMain({
             <Button
               variant={`${isMobile ? 'outline' : (!isMobile && open) ? 'outline' : 'ghost'}`}
               size="lg"
-              className={`w-full justify-start ${isMobile ? '' : (!isMobile && open) ? '' : 'p-1'} cursor-pointer `}
+              className={`w-full justify-start mt-1 ${isMobile ? '' : (!isMobile && open) ? '' : 'p-1'} cursor-pointer `}
             >
                 <Link href={item.url} onClick={() => setOpenMobile(false)} className="w-full flex justify-center items-center gap-2">
                   {item.icon && <item.icon />}

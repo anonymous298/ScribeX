@@ -2,7 +2,8 @@
 
 import * as React from "react"
 import {
-  NotebookTabs
+  NotebookTabs,
+  StarIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -17,6 +18,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { useUser } from "@clerk/nextjs"
+import { title } from "process"
 
 // This is sample data.
 const data = {
@@ -31,6 +33,11 @@ const data = {
       url: "/dashboard/notes",
       icon: NotebookTabs,
     },
+    {
+      title: "Starred Notes",
+      url: "/dashboard/starred",
+      icon : StarIcon,
+    }
     // {
     //   title: "Models",
     //   url: "#",
