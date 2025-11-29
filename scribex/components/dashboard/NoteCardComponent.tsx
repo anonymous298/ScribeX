@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { NoteCardSkeleton } from "./NoteCardSkeleton";
 
 type Note = {
   id: string;
@@ -36,6 +37,7 @@ export function ExpandableCardDemo() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoadingNotes, setIsLoadingNotes] = useState(false)
 
   const handleNoteDelete = async (noteId: string) => {
     try {
@@ -63,31 +65,38 @@ export function ExpandableCardDemo() {
   // Fetch notes
   useEffect(() => {
     const fetchNotes = async () => {
-      const allNotes = await getAllNotes();
+        setIsLoadingNotes(true)
+
+        const allNotes = await getAllNotes();
       
-      setNotes(allNotes ?? []);
+        setNotes(allNotes ?? []);
+
+        setIsLoadingNotes(false)
     };
     fetchNotes();
   }, []);
 
+  
   // Handle escape key & body scroll
   useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setActive(null);
+      function onKeyDown(event: KeyboardEvent) {
+          if (event.key === "Escape") setActive(null);
     }
-
+    
     if (active) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "auto";
-
+    
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active]);
+}, [active]);
 
   // Close on outside click
   useOutsideClick(ref, () => setActive(null));
+  
+  if (isLoadingNotes) return <NoteCardSkeleton/>
 
   return (
-    <>
+      <>
       {/* Overlay */}
       <AnimatePresence>
         {active && (
