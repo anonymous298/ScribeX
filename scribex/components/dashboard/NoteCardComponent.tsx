@@ -222,7 +222,7 @@ export function ExpandableCardDemo() {
             <motion.div
               layoutId={`card-${active.id}-${id}`}
               ref={ref}
-              className="w-full max-w-[500px] md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="rounded-2xl w-full max-w-[500px] md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
               <motion.div className="p-4 flex flex-col gap-4">
                 <motion.h3
@@ -257,7 +257,7 @@ export function ExpandableCardDemo() {
           >
             <SpotlightCard
               className="group relative bg-white dark:bg-neutral-900 p-4 md:p-6 shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col gap-6 justify-between min-h-[160px] md:min-h-[200px] w-full rounded-xl"
-              spotlightColor="rgba(0, 229, 255, 0.2)"
+              spotlightColor="rgba(0, 229, 255, 0.3)"
             >
               {/* Card Header */}
               <div className="w-full flex justify-between items-center">

@@ -112,3 +112,64 @@ export async function updateNote(noteId: string, formData: FormData) {
         return {success : false}
     }
 }
+
+export async function getTotalNotes() {
+    try {
+        const {userId: clerkId} = await auth()
+
+        if (!clerkId) return;
+
+        const noteCounts = await prisma.user.findUnique(
+            {
+                where : {
+                    clerkId,
+                },
+
+                include : {
+                    _count : {
+                        select : {
+                            notes: true
+                        }
+                    }
+                }
+            }
+        )
+
+        const totalNoteCounts = noteCounts?._count.notes
+
+        if (!totalNoteCounts) return;
+
+        return totalNoteCounts;
+
+    } catch (error) {
+        console.log('Error Collecting All Notes Count');
+        throw new Error('Error Collecting All Notes Count')
+    }
+}
+
+export async function getRecentlyUpdatedNotesCount() {
+  try {
+    const userId = await getCurrentUserDbId();
+    if (!userId) return 0;
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const count = await prisma.note.count({
+      where: {
+        author_id: userId,
+        AND: [
+          { updatedAt: { gte: sevenDaysAgo } }, // updated in last 7 days
+          { updatedAt: { gt: prisma.note.fields.createdAt } } // actually updated, not just created
+        ]
+      }
+    });
+
+    return count;
+
+  } catch (error) {
+    console.log("Error Getting Total Updated Notes Count");
+    throw new Error("Error Getting Total Updated Notes Count");
+  }
+}
+

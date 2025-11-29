@@ -66,3 +66,22 @@ export async function getCurrentUserDbId() {
         throw new Error('Error Getting Current User Db Id')
     }
 }
+
+export async function getTotalUsersCount() {
+    try {
+        const {userId} = await auth()
+        if (!userId) return;
+
+        const totalUsers = await prisma.user.findMany();
+
+        const totalUsersCount = totalUsers.length;
+
+        if (!totalUsers) return;
+
+        return totalUsersCount;
+
+    } catch (error) {
+        console.log('Error Getting Total User Count');
+        throw new Error('Error Getting Total User Count')
+    }
+}

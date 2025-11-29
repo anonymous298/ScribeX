@@ -28,6 +28,7 @@ import { Textarea } from "./ui/textarea"
 import { createNote } from "@/server/actions/note.action"
 import toast from "react-hot-toast"
 import { getCurrentUserDbId } from "@/server/actions/user.action"
+import { IconDashboard } from "@tabler/icons-react"
 
 export function TeamSwitcher({}) {
   const { isMobile, setOpenMobile, open } = useSidebar()
@@ -192,6 +193,21 @@ export function TeamSwitcher({}) {
             className={`w-full ${isMobile ? 'bg-secondary' : (!isMobile && open) ? 'bg-secondary' : ''}  cursor-pointer flex justify-center items-center mt-1`}
           >
 
+            <IconDashboard className="col-span-2 size-4"/>
+
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <Link href={'/dashboard'} className="w-full text-sm truncate font-bold" onClick={() => setOpenMobile(false)}>Dashboard</Link>
+            </div>
+          </Button>
+        </SidebarMenuItem>
+        
+        <SidebarMenuItem>
+
+          <Button 
+            variant={'ghost'}
+            className={`w-full ${isMobile ? 'bg-secondary' : (!isMobile && open) ? 'bg-secondary' : ''}  cursor-pointer flex justify-center items-center mt-1`}
+          >
+
             <HomeIcon className="col-span-2 size-4"/>
 
             <div className="grid flex-1 text-left text-sm leading-tight">
@@ -199,6 +215,7 @@ export function TeamSwitcher({}) {
             </div>
           </Button>
         </SidebarMenuItem>
+
     </SidebarMenu>
   )
 }
