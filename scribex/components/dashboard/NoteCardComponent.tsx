@@ -92,6 +92,7 @@ export function ExpandableCardDemo() {
         formData.append(Key, value);
       })
 
+      // eslint-disable-next-line prefer-const
       let result = await updateNote(noteId, formData);
 
       if (result?.success) {
