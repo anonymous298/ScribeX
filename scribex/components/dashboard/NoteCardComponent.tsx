@@ -46,6 +46,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
+import CreateNoteButtonForMainPage from "./CreateNoteButtonForMainPage";
 
 type Note = {
   id: string;
@@ -66,6 +67,7 @@ export function ExpandableCardDemo() {
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoadingNotes, setIsLoadingNotes] = useState(false)
+  const [isNotesNotPresent, setIsNotesNotPresent] = useState(true)
 
   const [currentSelectedNoteForEdit, setCurrentSelectedNoteForEdit] = useState<Note>()
   const [currentSelectedNoteForDelete, setCurrentSelectedNoteForDelete] = useState<Note>()
@@ -159,6 +161,16 @@ export function ExpandableCardDemo() {
       setNotes(allNotes ?? []);
 
       setIsLoadingNotes(false)
+
+      if (allNotes?.length === 0) {
+        setIsNotesNotPresent(true);
+      }
+
+      else {
+        setIsNotesNotPresent(false)
+      }
+
+
     };
     fetchNotes();
   }, []);
@@ -190,6 +202,8 @@ export function ExpandableCardDemo() {
   }, [currentSelectedNoteForEdit]);
 
   if (isLoadingNotes) return <NoteCardSkeleton />
+
+  if (isNotesNotPresent) return <CreateNoteButtonForMainPage />
 
   return (
     <>
@@ -300,9 +314,9 @@ export function ExpandableCardDemo() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       className="bg-red-500 cursor-pointer"
-                      onClick={(e) => { 
+                      onClick={(e) => {
                         setCurrentSelectedNoteForDelete(note);
-                        setIsDeleteDialogOpen(true); 
+                        setIsDeleteDialogOpen(true);
                         e.stopPropagation();
                       }}
                     >

@@ -26,7 +26,7 @@ export function NavMain({
   }[]
 }) {
 
-  const { setOpenMobile } = useSidebar()
+  const { setOpenMobile, open, isMobile } = useSidebar()
 
   return (
     <SidebarGroup>
@@ -35,15 +35,17 @@ export function NavMain({
         {items.map((item, idx) => (
           <SidebarMenuItem key={idx}>
             <Button
-              variant={'ghost'}
+              variant={`${isMobile ? 'outline' : (!isMobile && open) ? 'outline' : 'ghost'}`}
               size="lg"
-              className="w-full cursor-pointer "
+              className={`w-full justify-start ${isMobile ? '' : (!isMobile && open) ? '' : 'p-1'} cursor-pointer `}
             >
-              {item.icon && <item.icon />}
+                <Link href={item.url} onClick={() => setOpenMobile(false)} className="w-full flex justify-center items-center gap-2">
+                  {item.icon && <item.icon />}
 
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <Link href={item.url} className="w-full text-sm truncate text-foreground" onClick={() => setOpenMobile(false)}>{item.title}</Link>
-              </div>
+                  <div className="grid flex-1 text-left text-sm leading-tight">
+                    <span className="w-full text-sm truncate text-foreground">{item.title}</span>
+                  </div>
+                </Link>
             </Button>
           </SidebarMenuItem>
         ))}

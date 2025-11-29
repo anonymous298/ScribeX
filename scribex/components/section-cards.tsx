@@ -78,7 +78,7 @@ export function SectionCards() {
   }, [])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-2 lg:px-3 @5xl/main:grid-cols-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 mt-2 gap-4 @5xl/main:grid-cols-4">
       {cardsData.map((card, idx) => (
         <motion.div
           key={idx}

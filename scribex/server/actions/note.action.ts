@@ -4,8 +4,9 @@ import prisma from "@/lib/prisma";
 import { getCurrentUserDbId } from "./user.action"
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import { endOfMonth, startOfMonth } from "date-fns";
 
-export async function createNote(title:string, content?: string) {
+export async function createNote(title: string, content?: string) {
     try {
         const currentUserDbId = await getCurrentUserDbId();
         if (!currentUserDbId) return;
@@ -13,7 +14,7 @@ export async function createNote(title:string, content?: string) {
 
         const data = await prisma.note.create(
             {
-                data : {
+                data: {
                     title: title,
                     content: content ?? "",
                     author_id: currentUserDbId,
@@ -23,12 +24,12 @@ export async function createNote(title:string, content?: string) {
 
         revalidatePath('/dashboard/notes')
 
-        return {success : true, data}
+        return { success: true, data }
 
     } catch (error) {
         console.log('Error creating post', error);
         // throw new Error("Error creating new posts")
-        return {success : false}
+        return { success: false }
     }
 }
 
@@ -39,18 +40,18 @@ export async function getAllNotes() {
 
         const notes = await prisma.note.findMany(
             {
-                where : {
+                where: {
                     author_id: currentUserDbId,
                 },
 
-                orderBy : {
-                    createdAt : "desc"
+                orderBy: {
+                    createdAt: "desc"
                 }
             }
         )
 
         if (notes.length === 0) return [];
-        
+
         return notes
 
     } catch (error) {
@@ -65,24 +66,24 @@ export async function deleteNote(noteId: string) {
 
         await prisma.note.delete(
             {
-                where : {
+                where: {
                     id: noteId
                 }
             }
         )
 
         revalidatePath('/dashboard/notes')
-        return {success : true};
+        return { success: true };
 
     } catch (error) {
         console.log("Error deleting the note");
-        return {success : false}
+        return { success: false }
     }
 }
 
 export async function updateNote(noteId: string, formData: FormData) {
     try {
-        const {userId} = await auth();
+        const { userId } = await auth();
         if (!userId) return;
 
         if (!noteId) return;
@@ -97,37 +98,37 @@ export async function updateNote(noteId: string, formData: FormData) {
 
         await prisma.note.update(
             {
-                where : {
-                    id : noteId
+                where: {
+                    id: noteId
                 },
 
-                data : updatedData
+                data: updatedData
             }
         )
 
-        return {success : true}
+        return { success: true }
 
     } catch (error) {
         console.log("Error updating the note");
-        return {success : false}
+        return { success: false }
     }
 }
 
 export async function getTotalNotes() {
     try {
-        const {userId: clerkId} = await auth()
+        const { userId: clerkId } = await auth()
 
         if (!clerkId) return;
 
         const noteCounts = await prisma.user.findUnique(
             {
-                where : {
+                where: {
                     clerkId,
                 },
 
-                include : {
-                    _count : {
-                        select : {
+                include: {
+                    _count: {
+                        select: {
                             notes: true
                         }
                     }
@@ -148,28 +149,110 @@ export async function getTotalNotes() {
 }
 
 export async function getRecentlyUpdatedNotesCount() {
-  try {
-    const userId = await getCurrentUserDbId();
-    if (!userId) return 0;
+    try {
+        const userId = await getCurrentUserDbId();
+        if (!userId) return 0;
 
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const count = await prisma.note.count({
-      where: {
-        author_id: userId,
-        AND: [
-          { updatedAt: { gte: sevenDaysAgo } }, // updated in last 7 days
-          { updatedAt: { gt: prisma.note.fields.createdAt } } // actually updated, not just created
-        ]
-      }
-    });
+        const count = await prisma.note.count({
+            where: {
+                author_id: userId,
+                AND: [
+                    { updatedAt: { gte: sevenDaysAgo } }, // updated in last 7 days
+                    { updatedAt: { gt: prisma.note.fields.createdAt } } // actually updated, not just created
+                ]
+            }
+        });
 
-    return count;
+        return count;
 
-  } catch (error) {
-    console.log("Error Getting Total Updated Notes Count");
-    throw new Error("Error Getting Total Updated Notes Count");
-  }
+    } catch (error) {
+        console.log("Error Getting Total Updated Notes Count");
+        throw new Error("Error Getting Total Updated Notes Count");
+    }
 }
 
+export async function getNotesPerMonth() {
+    const userId = await getCurrentUserDbId();
+    if (!userId) return [];
+
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const notes = await prisma.note.groupBy({
+        by: ["createdAt"],
+        where: {
+            author_id: userId,
+            createdAt: { gte: sixMonthsAgo },
+        },
+        _count: { createdAt: true },
+    });
+
+    return notes.map((n) => ({
+        month: n.createdAt.toLocaleString("default", { month: "long" }),
+        count: n._count.createdAt,
+    }));
+}
+
+
+export async function getCreatedVsUpdatedNotesPerMonth() {
+  try {
+    const userId = await getCurrentUserDbId();
+    if (!userId) return [];
+
+    // Track last 6 months
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      return {
+        month: date.toLocaleString("default", { month: "long" }),
+        date,
+      };
+    }).reverse();
+
+    const results = [];
+
+    for (const m of months) {
+      const start = startOfMonth(m.date);
+      const end = endOfMonth(m.date);
+
+      // Count created notes in this month
+      const createdCount = await prisma.note.count({
+        where: {
+          author_id: userId,
+          createdAt: { gte: start, lte: end },
+        },
+      });
+
+      // Fetch all notes updated in this month
+      const notesUpdatedInMonth = await prisma.note.findMany({
+        where: {
+          author_id: userId,
+          updatedAt: { gte: start, lte: end },
+        },
+        select: { createdAt: true, updatedAt: true },
+      });
+
+      // Count only notes updated after creation
+      const updatedCount = notesUpdatedInMonth.filter(
+        (note) => note.updatedAt > note.createdAt
+      ).length;
+
+      results.push({
+        month: m.month,
+        created: createdCount,
+        updated: updatedCount,
+      });
+    }
+
+    return results;
+  } catch (error) {
+    console.error(
+      "Error fetching created vs updated notes per month:",
+      error
+    );
+    throw new Error("Failed to fetch notes comparison data");
+  }
+}

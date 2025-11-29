@@ -200,7 +200,7 @@ export function TeamSwitcher({}) {
             </div>
           </Button>
         </SidebarMenuItem>
-        
+
         <SidebarMenuItem>
 
           <Button 
@@ -208,11 +208,13 @@ export function TeamSwitcher({}) {
             className={`w-full ${isMobile ? 'bg-secondary' : (!isMobile && open) ? 'bg-secondary' : ''}  cursor-pointer flex justify-center items-center mt-1`}
           >
 
-            <HomeIcon className="col-span-2 size-4"/>
+            <Link href={'/'} onClick={() => setOpenMobile(false)} className="w-full flex justify-center items-center gap-2">
+              <HomeIcon className="col-span-2 size-4"/>
 
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <Link href={'/'} className="w-full text-sm truncate font-bold" onClick={() => setOpenMobile(false)}>Home</Link>
-            </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="w-full text-sm truncate font-bold">Home</span>
+              </div>
+            </Link>
           </Button>
         </SidebarMenuItem>
 

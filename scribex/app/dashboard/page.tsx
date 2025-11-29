@@ -1,4 +1,5 @@
-import { ChartBarDefault } from '@/components/dashboard/ChartBarDefaultComponent';
+import { ChartBarForComparision } from '@/components/dashboard/ChartBarForComparisionCreatedAndUpdated';
+import { ChartBarForNoteActivity } from '@/components/dashboard/ChartBarForNoteActivity';
 import { SectionCards } from '@/components/section-cards';
 import { createUserBasedOnClerkId } from '@/server/actions/user.action';
 import { auth } from '@clerk/nextjs/server';
@@ -21,8 +22,9 @@ const Page = async () => {
             <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" /> */}
             <SectionCards/>
 
-            <div>
-                <ChartBarDefault/>
+            <div className='grid grid-cols-1 md:grid-cols-2 mt-5 gap-4'>
+                <ChartBarForNoteActivity/>
+                <ChartBarForComparision/>
             </div>
         </div>
     )
