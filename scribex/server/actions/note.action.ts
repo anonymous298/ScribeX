@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { getCurrentUserDbId } from "./user.action"
 import { revalidatePath } from "next/cache";
+import { auth } from "@clerk/nextjs/server";
 
 export async function createNote(title:string, content?: string) {
     try {
@@ -43,7 +44,7 @@ export async function getAllNotes() {
                 },
 
                 orderBy : {
-                    createdAt : "asc"
+                    createdAt : "desc"
                 }
             }
         )
@@ -75,6 +76,39 @@ export async function deleteNote(noteId: string) {
 
     } catch (error) {
         console.log("Error deleting the note");
+        return {success : false}
+    }
+}
+
+export async function updateNote(noteId: string, formData: FormData) {
+    try {
+        const {userId} = await auth();
+        if (!userId) return;
+
+        if (!noteId) return;
+
+        const title: string = formData.get('title') as string;
+        const content: string = formData.get('content') as string;
+
+        const updatedData = {
+            title,
+            content
+        }
+
+        await prisma.note.update(
+            {
+                where : {
+                    id : noteId
+                },
+
+                data : updatedData
+            }
+        )
+
+        return {success : true}
+
+    } catch (error) {
+        console.log("Error updating the note");
         return {success : false}
     }
 }

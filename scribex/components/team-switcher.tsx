@@ -38,7 +38,7 @@ export function TeamSwitcher({}) {
     content: ""
   })
 
-  console.log(isMobile)
+  // console.log(isMobile)
   // console.log(formValues)
   // const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
