@@ -1,6 +1,5 @@
 import { ChartBarForComparision } from '@/components/dashboard/ChartBarForComparisionCreatedAndUpdated';
 import { ChartBarForNoteActivity } from '@/components/dashboard/ChartBarForNoteActivity';
-import { BasicEditorExample } from '@/components/dashboard/TextEditorComponent';
 import { SectionCards } from '@/components/section-cards';
 import { createUserBasedOnClerkId } from '@/server/actions/user.action';
 import { auth } from '@clerk/nextjs/server';
@@ -27,8 +26,6 @@ const Page = async () => {
                 <ChartBarForNoteActivity/>
                 <ChartBarForComparision/>
             </div>
-
-            <BasicEditorExample/>
         </div>
     )
 }
