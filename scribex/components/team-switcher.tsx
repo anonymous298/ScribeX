@@ -29,6 +29,8 @@ import { createNote } from "@/server/actions/note.action"
 import toast from "react-hot-toast"
 import { getCurrentUserDbId } from "@/server/actions/user.action"
 import { IconDashboard } from "@tabler/icons-react"
+import { Badge } from "./ui/badge"
+import { Tag } from "@/app/generated/prisma/enums"
 
 export function TeamSwitcher({}) {
   const { isMobile, setOpenMobile, open } = useSidebar()
@@ -36,10 +38,19 @@ export function TeamSwitcher({}) {
   const [isOpen, setIsOpen] = React.useState(false)
   const [formValues, setFormValues] = React.useState({
     title: "",
-    content: ""
+    content: "",
+    tag: "",
   })
 
-  // console.log(isMobile)
+  const tagColors: Record<Tag, string> = {
+      WORK: "bg-gradient-to-r from-red-400 to-red-600 text-white",
+      PERSONAL: "bg-gradient-to-r from-blue-400 to-blue-600 text-white",
+      STUDY: "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white",
+      IDEAS: "bg-gradient-to-r from-lime-400 to-emerald-500 text-white",
+      OTHER: "bg-gradient-to-r from-purple-400 to-purple-600 text-white",
+    };
+
+  // console.log(formValues)
   // console.log(formValues)
   // const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
@@ -53,12 +64,13 @@ export function TeamSwitcher({}) {
       
       const current = await getCurrentUserDbId()
 
-      const result = await createNote(formValues.title, formValues.content);
+      const result = await createNote(formValues);
 
       if (result?.success) {
         setFormValues({
           title: "",
-          content: ""
+          content: "",
+          tag: "",
         });
 
         toast.success("Note Created Successfully...")
@@ -152,10 +164,14 @@ export function TeamSwitcher({}) {
 
                 </div>
 
-                {/* For Future Updates */}
-                {/* <div>
-                  Tags
-                </div> */}
+                {/* Tags */}
+                <div className="flex gap-2 items-center flex-wrap md:flex-nowrap">
+                  <Badge variant={`${formValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "WORK" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({...formValues, tag: "WORK"})}>WORK</Badge>
+                  <Badge variant={`${formValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "PERSONAL" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({...formValues, tag: "PERSONAL"})}>PERSONAL</Badge>
+                  <Badge variant={`${formValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "STUDY" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({...formValues, tag: "STUDY"})}>STUDY</Badge>
+                  <Badge variant={`${formValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "IDEAS" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({...formValues, tag: "IDEAS"})}>IDEAS</Badge>
+                  <Badge variant={`${formValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "OTHER" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({...formValues, tag: "OTHER"})}>OTHER</Badge>
+                </div>
 
               </div>
 

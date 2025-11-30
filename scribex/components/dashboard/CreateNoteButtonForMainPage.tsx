@@ -21,6 +21,7 @@ import {
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
+import { Badge } from '../ui/badge'
 
 
 const CreateNoteButtonForMainPage = () => {
@@ -30,7 +31,8 @@ const CreateNoteButtonForMainPage = () => {
     const [isOpen, setIsOpen] = React.useState(false)
     const [formValues, setFormValues] = React.useState({
         title: "",
-        content: ""
+        content: "",
+        tag: "",
     })
 
 
@@ -40,12 +42,13 @@ const CreateNoteButtonForMainPage = () => {
 
             const current = await getCurrentUserDbId()
 
-            const result = await createNote(formValues.title, formValues.content);
+            const result = await createNote(formValues);
 
             if (result?.success) {
                 setFormValues({
                     title: "",
-                    content: ""
+                    content: "",
+                    tag: "",
                 });
 
                 toast.success("Note Created Successfully...")
@@ -125,10 +128,14 @@ const CreateNoteButtonForMainPage = () => {
 
                             </div>
 
-                            {/* For Future Updates */}
-                            {/* <div>
-                  Tags
-                </div> */}
+                            {/* Tags */}
+                            <div className="flex gap-2 items-center flex-wrap md:flex-nowrap">
+                                <Badge variant={`${formValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "WORK" })}>WORK</Badge>
+                                <Badge variant={`${formValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "PERSONAL" })}>PERSONAL</Badge>
+                                <Badge variant={`${formValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "STUDY" })}>STUDY</Badge>
+                                <Badge variant={`${formValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "IDEAS" })}>IDEAS</Badge>
+                                <Badge variant={`${formValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "OTHER" })}>OTHER</Badge>
+                            </div>
 
                         </div>
 

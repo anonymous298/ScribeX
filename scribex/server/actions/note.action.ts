@@ -5,18 +5,29 @@ import { getCurrentUserDbId } from "./user.action"
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 import { endOfMonth, startOfMonth } from "date-fns";
+import { Tag } from "@/app/generated/prisma/enums";
 
-export async function createNote(title: string, content?: string) {
+
+type FormDataProp = {
+    title: string
+    content: string
+    tag: string | null
+}
+
+export async function createNote(formData: FormDataProp) {
     try {
         const currentUserDbId = await getCurrentUserDbId();
         if (!currentUserDbId) return;
-        console.log("Current user ID:", currentUserDbId);
+        // console.log("Current user ID:", currentUserDbId);
+
+        const tagEnum: Tag | null = formData.tag ? (formData.tag as Tag) : null
 
         const data = await prisma.note.create(
             {
                 data: {
-                    title: title,
-                    content: content ?? "",
+                    title: formData.title,
+                    content: formData.content ?? "",
+                    tag: tagEnum,
                     author_id: currentUserDbId,
                 }
             }
@@ -43,6 +54,18 @@ export async function getAllNotes() {
                 where: {
                     author_id: currentUserDbId,
                 },
+
+                // select: {
+                //     id: true,
+                //     title: true,
+                //     content: true,
+                //     author_id: true,
+                //     tag: true,
+                //     starred: true,
+                //     createdAt: true,
+                //     updatedAt: true,
+                // },
+                
 
                 orderBy: {
                     createdAt: "desc"
@@ -90,10 +113,15 @@ export async function updateNote(noteId: string, formData: FormData) {
 
         const title: string = formData.get('title') as string;
         const content: string = formData.get('content') as string;
+        const tagString = formData.get("tag") as string | null;
+        
+        // Convert string to Tag enum, or null if no tag selected
+        const tag: Tag | null = tagString ? (tagString as Tag) : null;
 
         const updatedData = {
             title,
-            content
+            content,
+            tag,
         }
 
         await prisma.note.update(
@@ -255,4 +283,43 @@ export async function getCreatedVsUpdatedNotesPerMonth() {
     );
     throw new Error("Failed to fetch notes comparison data");
   }
+}
+
+export async function toggleStarredNote(noteId: string) {
+    try {
+        const userId = await getCurrentUserDbId();
+        if (!userId) return;
+
+        const currentNote = await prisma.note.findUnique(
+            {
+                where : {
+                    id: noteId,
+                }
+            }
+        )
+
+        if (!currentNote) return;
+
+
+
+        const toggledStarred = {
+            starred: !currentNote.starred
+        }
+
+        await prisma.note.update(
+            {
+                where : {
+                    id : noteId,
+                },
+
+                data : toggledStarred
+            }
+        )
+
+        return {success : true};
+
+    } catch (error) {
+        console.log("Error toggling the starred");
+        return {success : false}
+    }
 }
