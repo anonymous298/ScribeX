@@ -22,6 +22,7 @@ import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { Badge } from '../ui/badge'
+import { Tag } from '@/app/generated/prisma/enums'
 
 
 const CreateNoteButtonForMainPage = () => {
@@ -34,6 +35,14 @@ const CreateNoteButtonForMainPage = () => {
         content: "",
         tag: "",
     })
+
+    const tagColors: Record<Tag, string> = {
+        WORK: "bg-gradient-to-r from-red-400 to-red-600 text-white",
+        PERSONAL: "bg-gradient-to-r from-blue-400 to-blue-600 text-white",
+        STUDY: "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white",
+        IDEAS: "bg-gradient-to-r from-lime-400 to-emerald-500 text-white",
+        OTHER: "bg-gradient-to-r from-purple-400 to-purple-600 text-white",
+    };
 
 
     const handleCreateNote = async () => {
@@ -130,11 +139,11 @@ const CreateNoteButtonForMainPage = () => {
 
                             {/* Tags */}
                             <div className="flex gap-2 items-center flex-wrap md:flex-nowrap">
-                                <Badge variant={`${formValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "WORK" })}>WORK</Badge>
-                                <Badge variant={`${formValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "PERSONAL" })}>PERSONAL</Badge>
-                                <Badge variant={`${formValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "STUDY" })}>STUDY</Badge>
-                                <Badge variant={`${formValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "IDEAS" })}>IDEAS</Badge>
-                                <Badge variant={`${formValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setFormValues({ ...formValues, tag: "OTHER" })}>OTHER</Badge>
+                                <Badge variant={`${formValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "WORK" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({ ...formValues, tag: "WORK" })}>WORK</Badge>
+                                <Badge variant={`${formValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "PERSONAL" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({ ...formValues, tag: "PERSONAL" })}>PERSONAL</Badge>
+                                <Badge variant={`${formValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "STUDY" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({ ...formValues, tag: "STUDY" })}>STUDY</Badge>
+                                <Badge variant={`${formValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "IDEAS" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({ ...formValues, tag: "IDEAS" })}>IDEAS</Badge>
+                                <Badge variant={`${formValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${formValues.tag === "OTHER" ? tagColors[formValues.tag] : ""}`} onClick={() => setFormValues({ ...formValues, tag: "OTHER" })}>OTHER</Badge>
                             </div>
 
                         </div>

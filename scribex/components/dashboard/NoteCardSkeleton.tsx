@@ -12,7 +12,7 @@ export function NoteCardSkeleton() {
             return (
                 <SpotlightCard
                     key={item}
-                    className="group relative bg-white dark:bg-neutral-900 p-4 md:p-6 shadow-md flex flex-col gap-6 justify-between min-h-[160px] md:min-h-[200px] w-full rounded-xl"
+                    className="group relative bg-white border-none dark:bg-neutral-900 p-4 md:p-6 shadow-md flex flex-col gap-6 justify-between min-h-[160px] md:min-h-[200px] w-full rounded-xl"
                     spotlightColor="rgba(0, 229, 255, 0.2)"
                 >
                     {/* Card Header */}

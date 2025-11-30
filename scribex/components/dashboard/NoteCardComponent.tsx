@@ -462,11 +462,11 @@ export function ExpandableCardDemo() {
               </div>
 
               <div className="flex gap-2 items-center flex-wrap md:flex-nowrap">
-                <Badge variant={`${updateFormValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "WORK" })}>WORK</Badge>
-                <Badge variant={`${updateFormValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "PERSONAL" })}>PERSONAL</Badge>
-                <Badge variant={`${updateFormValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "STUDY" })}>STUDY</Badge>
-                <Badge variant={`${updateFormValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "IDEAS" })}>IDEAS</Badge>
-                <Badge variant={`${updateFormValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 `} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "OTHER" })}>OTHER</Badge>
+                <Badge variant={`${updateFormValues.tag === "WORK" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${updateFormValues.tag === "WORK" ? tagColors[updateFormValues.tag] : ""}`} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "WORK" })}>WORK</Badge>
+                <Badge variant={`${updateFormValues.tag === "PERSONAL" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${updateFormValues.tag === "PERSONAL" ? tagColors[updateFormValues.tag] : ""}`} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "PERSONAL" })}>PERSONAL</Badge>
+                <Badge variant={`${updateFormValues.tag === "STUDY" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${updateFormValues.tag === "STUDY" ? tagColors[updateFormValues.tag] : ""}`} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "STUDY" })}>STUDY</Badge>
+                <Badge variant={`${updateFormValues.tag === "IDEAS" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${updateFormValues.tag === "IDEAS" ? tagColors[updateFormValues.tag] : ""}`} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "IDEAS" })}>IDEAS</Badge>
+                <Badge variant={`${updateFormValues.tag === "OTHER" ? "default" : "outline"}`} className={`cursor-pointer hover:bg-muted p-2 px-3 ${updateFormValues.tag === "OTHER" ? tagColors[updateFormValues.tag] : ""}`} onClick={() => setUpdateFormValues({ ...updateFormValues, tag: "OTHER" })}>OTHER</Badge>
               </div>
 
             </div>
