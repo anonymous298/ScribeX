@@ -47,6 +47,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import CreateNoteButtonForMainPage from "./CreateNoteButtonForMainPage";
+import { ScrollArea } from "../ui/scroll-area";
 
 type Note = {
   id: string;
@@ -208,54 +209,57 @@ export function ExpandableCardDemo() {
   return (
     <>
       {/* Overlay */}
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 z-10"
-          />
-        )}
-      </AnimatePresence>
+<AnimatePresence>
+  {active && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/20 z-10"
+    />
+  )}
+</AnimatePresence>
 
-      {/* Expanded modal card */}
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            className="fixed inset-0 grid place-items-center z-[100] px-4"
-            layout
+{/* Expanded modal card */}
+<AnimatePresence>
+  {active && (
+    <motion.div
+      className="fixed inset-0 grid place-items-center z-[100] px-4"
+      layout
+    >
+      <motion.button
+        layout
+        className="absolute top-4 right-4 lg:hidden flex items-center justify-center bg-white rounded-full h-6 w-6"
+        onClick={() => setActive(null)}
+      >
+        <CloseIcon />
+      </motion.button>
+
+      <motion.div
+        layoutId={`card-${active.id}-${id}`}
+        ref={ref}
+        className="rounded-2xl w-full max-w-[500px] md:max-h-[90%] max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-y-auto overflow-x-hidden select-text"
+      >
+        <motion.div className="p-4 flex flex-col gap-4">
+          <motion.h3
+            layoutId={`title-${active.id}-${id}`}
+            className="font-bold text-3xl text-center text-neutral-700 dark:text-neutral-200"
           >
-            <motion.button
-              layout
-              className="absolute top-4 right-4 lg:hidden flex items-center justify-center bg-white rounded-full h-6 w-6"
-              onClick={() => setActive(null)}
-            >
-              <CloseIcon />
-            </motion.button>
-            <motion.div
-              layoutId={`card-${active.id}-${id}`}
-              ref={ref}
-              className="rounded-2xl w-full max-w-[500px] md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
-            >
-              <motion.div className="p-4 flex flex-col gap-4">
-                <motion.h3
-                  layoutId={`title-${active.id}-${id}`}
-                  className="font-bold text-3xl text-center text-neutral-700 dark:text-neutral-200"
-                >
-                  {active.title}
-                </motion.h3>
-                <motion.p
-                  layoutId={`content-${active.id}-${id}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-base whitespace-pre-wrap"
-                >
-                  {active.content ?? ""}
-                </motion.p>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {active.title}
+          </motion.h3>
+
+          <motion.p
+            layoutId={`content-${active.id}-${id}`}
+            className="text-neutral-600 dark:text-neutral-400 text-base whitespace-pre-wrap"
+          >
+            {active.content ?? ""}
+          </motion.p>
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
       {/* Notes grid */}
       <ul className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
