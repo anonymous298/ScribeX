@@ -1,9 +1,10 @@
+import AllStarredNotesComponent from '@/components/StarredNotes/StarredNoteAllCardsComponent'
 import React from 'react'
 
 const page = () => {
   return (
     <div>
-      No Starred Notes Yet
+      <AllStarredNotesComponent/>
     </div>
   )
 }

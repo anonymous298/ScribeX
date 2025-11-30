@@ -101,7 +101,7 @@ export function ExpandableCardDemo() {
     tag: currentSelectedNoteForEdit?.tag ?? "",
   })
 
-  const [toggles, setToggles] = useState<Record<string, boolean>>({});
+  const [starredState, setStarredState] = useState<Record<string, boolean>>({});
 
   const handleEditNote = async (noteId: string) => {
     try {
@@ -180,7 +180,11 @@ export function ExpandableCardDemo() {
       const result = await toggleStarredNote(noteId);
 
       if (result?.success) {
-        toast.success("Starred");
+        // if (!starredState[noteId]) {
+        //    toast.success("Starred");
+        // } else {
+        //   toast.success("Unstarred")
+        // }
       }
 
       else {
@@ -242,6 +246,19 @@ export function ExpandableCardDemo() {
       });
     }
   }, [currentSelectedNoteForEdit]);
+
+  // notes is your fetched array of notes
+  useEffect(() => {
+    const initialState: Record<string, boolean> = {};
+
+    notes.forEach(note => {
+      initialState[note.id] = note.starred; // initial starred from DB
+    });
+
+    setStarredState(initialState);
+  }, [notes]);
+
+  console.log(starredState)
 
   if (isLoadingNotes) return <NoteCardSkeleton />
 
@@ -413,10 +430,20 @@ export function ExpandableCardDemo() {
                   className="relative z-10 p-1 rounded-full hover:bg-yellow-100 dark:hover:bg-yellow-900 transition-colors duration-200"
                   onClick={(e) => {
                     e.stopPropagation(); // prevent card click
-                    handleStarredToggle(note.id);
+                    handleStarredToggle(note.id)
+                    setStarredState({ ...starredState, [note.id]: !starredState[note.id] });
                   }}
                 >
-                  <Star className={`size-4 md:size-4 ${note.starred ? "fill-yellow-400" : ""}`} />
+                  <Star
+                    className={`
+                      size-4 md:size-5 cursor-pointer
+                      transition-all duration-200
+                      ${starredState[note.id]
+                        ? "fill-yellow-400 stroke-yellow-500"
+                        : "fill-transparent stroke-neutral-400 hover:stroke-yellow-400"
+                      }
+                    `}
+                  />
                 </button>
               </div>
             </SpotlightCard>

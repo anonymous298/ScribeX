@@ -285,6 +285,54 @@ export async function getCreatedVsUpdatedNotesPerMonth() {
   }
 }
 
+export async function getTotalStarredNotes() {
+    try {
+        const { userId: clerkId } = await auth()
+
+        if (!clerkId) return;
+
+        const noteCounts = await prisma.user.findUnique(
+            {
+                where: {
+                    clerkId,
+                },
+
+                include: {
+                    notes : {
+                        select : {
+                            starred: true
+                        }
+                    },
+
+                    _count: {
+                        select: {
+                            notes: true
+                        }
+                    }
+                }
+            }
+        )
+
+        if (!noteCounts) return;
+        
+        let totalStarredNoteCounts = 0;
+
+        for (const note of noteCounts?.notes) {
+            if (note.starred) {
+                totalStarredNoteCounts++
+            }
+        }
+
+        if (!totalStarredNoteCounts) return;
+
+        return totalStarredNoteCounts;
+
+    } catch (error) {
+        console.log('Error Collecting All Notes Count');
+        throw new Error('Error Collecting All Notes Count')
+    }
+}
+
 export async function toggleStarredNote(noteId: string) {
     try {
         const userId = await getCurrentUserDbId();
@@ -321,5 +369,34 @@ export async function toggleStarredNote(noteId: string) {
     } catch (error) {
         console.log("Error toggling the starred");
         return {success : false}
+    }
+}
+
+export async function fetchAllStarredNotes() {
+    try {
+        const userId = await getCurrentUserDbId();
+        if (!userId) return;
+
+        const allStarredNotesData = await prisma.note.findMany(
+            {
+                where : {
+                    AND : [
+                        {author_id : userId},
+                        {starred : true}
+                    ]
+                },
+
+                orderBy: {
+                    createdAt: "desc"
+                }
+            }
+        )
+
+        if (allStarredNotesData.length === 0) return [];
+
+        return allStarredNotesData;
+
+    } catch (error) {
+        
     }
 }

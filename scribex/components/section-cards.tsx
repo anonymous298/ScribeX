@@ -5,7 +5,7 @@ import SpotlightCard from "./SpotlightCard"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import { getRecentlyUpdatedNotesCount, getTotalNotes } from "@/server/actions/note.action"
+import { getRecentlyUpdatedNotesCount, getTotalNotes, getTotalStarredNotes } from "@/server/actions/note.action"
 import { Skeleton } from "./ui/skeleton"
 import { getTotalUsersCount } from "@/server/actions/user.action"
 
@@ -14,6 +14,7 @@ export function SectionCards() {
     const [totalNotes, setTotalNotes] = useState(0)
     const [totalUsers, setTotalUsers] = useState(0)
     const [totalUpdatedNotes, setTotalUpdatedNotes] = useState(0)
+    const [totalStarredNotes, setTotalStarredNotes] = useState(0)
 
     const [isFetchingNotes, setIsFetchingNotes] = useState(false)
 
@@ -45,6 +46,15 @@ export function SectionCards() {
       trendingIcon: <IconTrendingUp className="size-4" />,
       color: "bg-gradient-to-tr from-amber-500 to-orange-400 text-white"
     },
+    {
+      title: "Starred Notes",
+      value: totalStarredNotes,
+      badge: { icon: <IconTrendingUp />, text: "+3%" },
+      footer: "Favorite notes by user",
+      subfooter: "Based on activity this week",
+      trendingIcon: <IconTrendingUp className="size-4" />,
+      color: "bg-gradient-to-tr from-rose-500 to-pink-500 text-white"
+    },
   ]
 
   useEffect(() => {
@@ -56,11 +66,15 @@ export function SectionCards() {
             const totalNotesData = await getTotalNotes();
             const totalUsersData = await getTotalUsersCount();
             const totalUpdatedNotesData = await getRecentlyUpdatedNotesCount()
+            const totalStarredNotesData = await getTotalStarredNotes();
+
+            // console.log("Total Starred Notes",totalStarredNotesData)
 
             if (totalNotesData || totalUsersData || totalUpdatedNotes) {
                 setTotalNotes(totalNotesData ?? 0);
                 setTotalUsers(totalUsersData ?? 0)
                 setTotalUpdatedNotes(totalUpdatedNotesData ?? 0)
+                setTotalStarredNotes(totalStarredNotesData ?? 0)
 
                 console.log(totalUpdatedNotes)
 
@@ -78,7 +92,7 @@ export function SectionCards() {
   }, [])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 mt-2 gap-4 @5xl/main:grid-cols-4">
+    <div className="grid grid-cols-1 max-[830px]:grid-cols-1 min-[830px]:grid-cols-2 2xl:grid-cols-4   mt-2 gap-4 @5xl/main:grid-cols-4">
       {cardsData.map((card, idx) => (
         <motion.div
           key={idx}
